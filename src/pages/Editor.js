@@ -2,10 +2,13 @@ import { useState } from "react";
 import styled from "styled-components";
 import ReactMarkdownWrapper from "../components/ReactMarkdownWrapper";
 import MonacoEditor from "@monaco-editor/react";
+import SectionsColumn from "../components/SectionsColumn";
+import initialData from "../initial-data";
 
 const Container = styled.div`
   display: flex;
   margin-top: 20px;
+  justify-content: flex-start;
 `;
 
 const Preview = styled.div`
@@ -22,6 +25,7 @@ const EditorWrapper = styled.div`
   width: 35vw;
   height: 80vh;
   margin-left: 10px;
+  margin-right: 10px;
   overflow: scroll;
 `;
 
@@ -30,6 +34,11 @@ const Editor = () => {
 
   return (
     <Container>
+      <SectionsColumn
+        sections={initialData.sectionsOrdering.map(
+          (sectionId) => initialData.sections[sectionId]
+        )}
+      />
       <EditorWrapper>
         <MonacoEditor
           language="markdown"
