@@ -5,6 +5,7 @@ import MonacoEditor from "@monaco-editor/react";
 
 const Container = styled.div`
   display: flex;
+  margin-top: 20px;
 `;
 
 const Preview = styled.div`
@@ -17,26 +18,33 @@ const Preview = styled.div`
   overflow: scroll;
 `;
 
+const EditorWrapper = styled.div`
+  width: 35vw;
+  height: 80vh;
+  margin-left: 10px;
+  overflow: scroll;
+`;
+
 const Editor = () => {
   const [markdown, setMarkdown] = useState("");
 
   return (
     <Container>
-      <MonacoEditor
-        height="85vh"
-        language="markdown"
-        width="40vw"
-        theme="vs-dark"
-        value={markdown}
-        loading="loading..."
-        onChange={(value, e) => setMarkdown(value)}
-        options={{
-          lineNumbers: "off",
-          minimap: {
-            enabled: false,
-          },
-        }}
-      />
+      <EditorWrapper>
+        <MonacoEditor
+          language="markdown"
+          theme="vs-dark"
+          value={markdown}
+          loading="loading..."
+          onChange={(value, e) => setMarkdown(value)}
+          options={{
+            lineNumbers: "off",
+            minimap: {
+              enabled: false,
+            },
+          }}
+        />
+      </EditorWrapper>
       <Preview className="markdown-body">
         <ReactMarkdownWrapper body={markdown} />
       </Preview>
