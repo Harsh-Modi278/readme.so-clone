@@ -11,28 +11,6 @@ const ReactMarkdownWrapper = ({ body }) => {
       children={body}
       linkTarget="_blank"
       remarkPlugins={[remarkGfm, remarkToc]}
-      components={{
-        code({ node, inline, className, children, ...props }) {
-          const match = /language-(\w+)/.exec(className || "");
-          // className is the name of the language
-          // children contains the code
-          // props are the remainging props
-          return !inline && match ? (
-            <pre>
-              <SyntaxHighlighter
-                children={String(children).replace(/\n$/, "")}
-                language={className}
-                style={docco}
-              />
-            </pre>
-          ) : (
-            //   If inline OR no match with language then just print the code
-            <code className={className} {...props}>
-              {children}
-            </code>
-          );
-        },
-      }}
     />
   );
 };
