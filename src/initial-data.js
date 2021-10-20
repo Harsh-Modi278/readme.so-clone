@@ -4,133 +4,114 @@ const initialData = {
       id: "section-1",
       title: "Title and Description",
       markdown: `
-      
-            # Project Title
-            
-            A brief description of what this project does and who it's for
-            
-            `,
+# Project Title
+
+A brief description of what this project does and who it's for`,
     },
     "section-2": {
       id: "section-2",
       title: "Demo",
       markdown: `
-            ## Demo
+## Demo
 
-            Insert gif or link to demo
-            
-            `,
+Insert gif or link to demo`,
     },
     "section-3": {
       id: "section-3",
       title: "Deployment",
       markdown: `
-            ## Deployment
+## Deployment
 
-            To deploy this project run
+To deploy this project run
 
-            \`\`\`bash
-            npm run deploy
-            \`\`\`
-  
-        `,
+\`\`\`bash
+npm run deploy
+\`\`\`  `,
     },
     "section-4": {
       id: "section-4",
       title: "Contributing",
       markdown: `
-        ## Contributing
+## Contributing
 
-        Contributions are always welcome!
+Contributions are always welcome!
 
-        See \`contributing.md\` for ways to get started.
+See \`contributing.md\` for ways to get started.
 
-        Please adhere to this project's \`code of conduct\`.
-
-        `,
+Please adhere to this project's \`code of conduct\`.`,
     },
     "section-5": {
       id: "section-5",
       title: "Screenshots",
       markdown: `
-            ## Screenshots
+## Screenshots
 
-            ![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
-  
-        `,
+![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)`,
     },
     "section-6": {
       id: "section-6",
       title: "Environmental variables",
       markdown: `
-            ## Environment Variables
+## Environment Variables
 
-            To run this project, you will need to add the following environment variables to your .env file
+To run this project, you will need to add the following environment variables to your .env file
 
-            \`API_KEY\`
+\`API_KEY\`
 
-            \`ANOTHER_API_KEY\`
-
-        `,
+\`ANOTHER_API_KEY\``,
     },
     "section-7": {
       id: "section-7",
       title: "Run locally",
       markdown: `        
-        ## Run Locally
+## Run Locally
 
-        Clone the project
+Clone the project
 
-        \`\`\`bash
-        git clone https://link-to-project
-        \`\`\`
+\`\`\`bash
+git clone https://link-to-project
+\`\`\`
 
-        Go to the project directory
+Go to the project directory
 
-        \`\`\`bash
-        cd my-project
-        \`\`\`
+\`\`\`bash
+cd my-project
+\`\`\`
 
-        Install dependencies
+Install dependencies
 
-        \`\`\`bash
-        npm install
-        \`\`\`
+\`\`\`bash
+npm install
+\`\`\`
 
-        Start the server
+Start the server
 
-        \`\`\`bash
-        npm run start
-        \`\`\`
-
-        `,
+\`\`\`bash
+npm run start
+\`\`\``,
     },
     "section-8": {
       id: "section-8",
       title: "Tech",
       markdown: `
-            ## Tech Stack
+## Tech Stack
 
-            **Client:** React, Redux, TailwindCSS
+**Client:** React, Redux, TailwindCSS
 
-            **Server:** Node, Express
-            
-        `,
+**Server:** Node, Express            `,
     },
     "section-9": {
       id: "section-9",
       title: "Installation",
       markdown: `
-        ## Installation
+## Installation
 
-        Install my-project with npm
+Install my-project with npm
 
-        \`\`\`bash
-        npm install my-project
-        cd my-project
-        \`\`\`
-            
-        `,
+\`\`\`bash
+npm install my-project
+cd my-project
+\`\`\``,
     },
   },
   sectionsOrdering: [
