@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Typography from "@mui/material/Typography";
 import initialData from "../initial-data";
@@ -44,11 +44,81 @@ const CardWrapper = styled.div`
 `;
 
 const SectionsColumn = (props) => {
+  const { setMarkdown, setTotalMarkdown, markdownValue } = props;
+  const [currSectionInMarkdown, setCurrSectionInMarkdown] =
+    useState("section-1");
   const [data, setData] = useState(initialData);
+  const [editableSections, setEditableSections] = useState(
+    localStorage.getItem("editable-sections")
+      ? [...JSON.parse(localStorage.getItem("editable-sections"))]
+      : [initialData.sections["section-1"]]
+  );
 
-  const handleDragStart = (start) => {
-    console.log(start);
+  const handleSectionClick = (e, sectionId) => {
+    // set markdown in editor to the clicked section's (with 'sectionId') markdown
+    setCurrSectionInMarkdown(sectionId);
+    setMarkdown(
+      editableSections.filter((sec) => sec.id === sectionId)[0].markdown
+    );
   };
+
+  const handleSectionReset = (e, sectionId) => {
+    let updatedEditableSections = editableSections;
+    updatedEditableSections = updatedEditableSections.map((sec) => {
+      if (sec.id !== sectionId) {
+        return sec;
+      }
+      return initialData.sections[sectionId];
+    });
+    setMarkdown(initialData.sections[sectionId]);
+    setEditableSections(updatedEditableSections);
+    localStorage.setItem(
+      "editable-sections",
+      JSON.stringify(updatedEditableSections)
+    );
+  };
+
+  useEffect(() => {
+    let newSections = Array.from(editableSections);
+    const newUnusedSections = data.sectionsOrdering.filter(
+      (sectionId) => newSections.map((sec) => sec.id).indexOf(sectionId) === -1
+    );
+    setData({
+      ...data,
+      sectionsOrdering: newUnusedSections,
+    });
+
+    setMarkdown(editableSections[0].markdown);
+    setCurrSectionInMarkdown(editableSections[0].id);
+
+    setTotalMarkdown(newSections.map((section) => section.markdown).join(" "));
+  }, []);
+
+  useEffect(() => {
+    // console.log("component did update:", { markdownValue, editableSections });
+    setMarkdown(
+      editableSections.filter((sec) => sec.id === currSectionInMarkdown)[0]
+        .markdown
+    );
+  });
+
+  useEffect(() => {
+    let newSections = Array.from(editableSections);
+    newSections = newSections.map((sec) => {
+      if (sec.id !== currSectionInMarkdown) {
+        return sec;
+      }
+      return { ...sec, markdown: markdownValue };
+    });
+
+    setEditableSections(newSections);
+    setMarkdown(
+      newSections.filter((sec) => sec.id === currSectionInMarkdown)[0].markdown
+    );
+    setTotalMarkdown(newSections.map((section) => section.markdown).join(" "));
+
+    localStorage.setItem("editable-sections", JSON.stringify(newSections));
+  }, [markdownValue]);
 
   const handleDragEnd = (result) => {
     const { source, destination, draggableId } = result;
@@ -64,17 +134,29 @@ const SectionsColumn = (props) => {
       return;
     }
 
-    const newSectionIds = Array.from(data.sectionsOrdering);
+    const newSections = Array.from(editableSections);
 
-    newSectionIds.splice(source.index, 1); //from the given index, remove 1 item from the array
-    newSectionIds.splice(destination.index, 0, draggableId); // at destination index, add the draggableId (which is the taskId)
+    newSections.splice(source.index, 1); //from the given index, remove 1 item from the array
+    newSections.splice(
+      destination.index,
+      0,
+      ...editableSections.filter((curr) => curr.id === draggableId)
+    ); // at destination index, add the draggableId (which is the taskId)
 
-    const newState = {
+    setEditableSections(newSections);
+
+    const newUnusedSections = data.sectionsOrdering.filter(
+      (sectionId) => newSections.map((sec) => sec.id).indexOf(sectionId) === -1
+    );
+    setData({
       ...data,
-      sectionsOrdering: newSectionIds,
-    };
+      sectionsOrdering: newUnusedSections,
+    });
 
-    setData(newState);
+    setMarkdown(newSections[destination.index].markdown);
+    setCurrSectionInMarkdown(newSections[destination.index].id);
+    setTotalMarkdown(newSections.map((section) => section.markdown).join(" "));
+
     return;
   };
   return (
@@ -82,16 +164,16 @@ const SectionsColumn = (props) => {
       <Container>
         <DragDropContext
           onDragEnd={handleDragEnd}
-          onDragStart={handleDragStart}
+          // onDragStart={handleDragStart}
           // onDragUpdate={handleDragUpdate}
         >
           <Typography variant="caption" component="div" gutterBottom>
             Click on a section below to edit the contents
           </Typography>
           <Column
-            sections={data.sectionsOrdering.map(
-              (sectionId) => data.sections[sectionId]
-            )}
+            sections={editableSections}
+            handleSectionClick={handleSectionClick}
+            handleSectionReset={handleSectionReset}
           />
         </DragDropContext>
         <Typography variant="caption" component="div" gutterBottom>
@@ -101,7 +183,29 @@ const SectionsColumn = (props) => {
           {Array.from(
             data.sectionsOrdering.map((sectionId) => data.sections[sectionId])
           ).map((section) => (
-            <CardWrapper key={section.id}>
+            <CardWrapper
+              key={section.id}
+              onClick={(e) => {
+                const newSections = Array.from(editableSections);
+                newSections.push(section);
+                setEditableSections(newSections);
+
+                const newUnusedSections = data.sectionsOrdering.filter(
+                  (sectionId) =>
+                    newSections.map((sec) => sec.id).indexOf(sectionId) === -1
+                );
+                setData({
+                  ...data,
+                  sectionsOrdering: newUnusedSections,
+                });
+
+                setMarkdown(section.markdown);
+                setCurrSectionInMarkdown(section.id);
+                setTotalMarkdown(
+                  newSections.map((section) => section.markdown).join(" ")
+                );
+              }}
+            >
               <Typography
                 variant="subtitle1"
                 component="div"

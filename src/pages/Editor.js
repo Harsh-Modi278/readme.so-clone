@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ReactMarkdownWrapper from "../components/ReactMarkdownWrapper";
 import MonacoEditor from "@monaco-editor/react";
@@ -31,13 +31,16 @@ const EditorWrapper = styled.div`
 
 const Editor = () => {
   const [markdown, setMarkdown] = useState("");
-
+  const [totalMarkdown, setTotalMarkdown] = useState("");
   return (
     <Container>
       <SectionsColumn
+        setMarkdown={setMarkdown}
+        setTotalMarkdown={setTotalMarkdown}
         sections={initialData.sectionsOrdering.map(
           (sectionId) => initialData.sections[sectionId]
         )}
+        markdownValue={markdown}
       />
       <EditorWrapper>
         <MonacoEditor
@@ -45,7 +48,10 @@ const Editor = () => {
           theme="vs-dark"
           value={markdown}
           loading="loading..."
-          onChange={(value, e) => setMarkdown(value)}
+          onChange={(value, e) => {
+            setMarkdown(value);
+            // console.log(currSectionInMarkdown);
+          }}
           options={{
             lineNumbers: "off",
             minimap: {
@@ -55,7 +61,7 @@ const Editor = () => {
         />
       </EditorWrapper>
       <Preview className="markdown-body">
-        <ReactMarkdownWrapper body={markdown} />
+        <ReactMarkdownWrapper body={totalMarkdown} />
       </Preview>
     </Container>
   );

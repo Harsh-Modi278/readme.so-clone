@@ -3,6 +3,8 @@ import { Draggable } from "react-beautiful-dnd";
 import Typography from "@mui/material/Typography";
 import styled from "styled-components";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CachedIcon from "@mui/icons-material/Cached";
 
 const CardWrapper = styled.div`
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -22,14 +24,21 @@ const CardWrapper = styled.div`
   display: flex;
 `;
 
-const HandleWrapper = styled.div`
-  margin-top: 2;
+const IconWrapper = styled.div`
+  margin-top: 3px;
   border: ${(props) => (props.isDragging ? "3px solid lightgreen" : "none")};
   border-radius: 5px;
 `;
 
 const Section = (props) => {
-  const { section, index } = props;
+  const {
+    section,
+    index,
+    handleSectionClick,
+    sectionIdClicked,
+    setSectionIDClicked,
+    handleSectionReset,
+  } = props;
   return (
     <Draggable draggableId={section.id} index={index} key={section.id}>
       {(provided, snapshot) => (
@@ -37,13 +46,21 @@ const Section = (props) => {
           {...provided.draggableProps}
           ref={provided.innerRef}
           isDragging={snapshot.isDragging}
+          onClick={(e) => {
+            // console.log("here:", e.currentTarget);
+            setSectionIDClicked(section.id);
+            handleSectionClick(e, section.id);
+          }}
+          onFocus={(e) => {
+            console.log("here");
+          }}
         >
-          <HandleWrapper
+          <IconWrapper
             {...provided.dragHandleProps}
             isDragging={snapshot.isDragging}
           >
             <DragIndicatorIcon />
-          </HandleWrapper>
+          </IconWrapper>
           <Typography
             variant="subtitle1"
             component="div"
@@ -52,6 +69,22 @@ const Section = (props) => {
           >
             {section.title}
           </Typography>
+          {sectionIdClicked === section.id && (
+            <>
+              <div style={{ flexGrow: "1" }}></div>
+              <IconWrapper
+                onClick={(e) => {
+                  console.log("here:", e.target);
+                  handleSectionReset(e, section.id);
+                }}
+              >
+                <CachedIcon />
+              </IconWrapper>
+              <IconWrapper>
+                <DeleteIcon />
+              </IconWrapper>
+            </>
+          )}
         </CardWrapper>
       )}
     </Draggable>

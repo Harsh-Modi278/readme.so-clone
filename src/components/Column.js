@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Droppable } from "react-beautiful-dnd";
 import Section from "./Section";
@@ -10,7 +10,8 @@ const SectionList = styled.div`
 `;
 
 const Column = (props) => {
-  const { sections } = props;
+  const { sections, handleSectionClick, handleSectionReset } = props;
+  const [sectionIdClicked, setSectionIDClicked] = useState("section-1");
   return (
     <Droppable droppableId="sections">
       {(provided, snapshot) => (
@@ -19,8 +20,16 @@ const Column = (props) => {
           {...provided.droppableProps}
           isDragginOver={snapshot.isDraggingOver}
         >
-          {sections.map((section, index) => (
-            <Section section={section} index={index} key={section.id} />
+          {Array.from(sections).map((section, index) => (
+            <Section
+              section={section}
+              index={index}
+              key={section.id}
+              handleSectionClick={handleSectionClick}
+              setSectionIDClicked={setSectionIDClicked}
+              sectionIdClicked={sectionIdClicked}
+              handleSectionReset={handleSectionReset}
+            />
           ))}
           {provided.placeholder}
         </SectionList>
