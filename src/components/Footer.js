@@ -18,7 +18,7 @@ function Copyright() {
       </Link>{" "}
       <Link
         color="inherit"
-        href="https://github.com/Harsh-Modi278"
+        href="https://github.com/Harsh-Modi278/readme.so-clone"
         target="_blank"
       >
         <GitHubIcon fontSize="70%" />
