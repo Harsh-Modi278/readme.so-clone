@@ -10,6 +10,7 @@ import Snackbar from "@mui/material/Snackbar";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import Switch from "@mui/material/Switch";
 
 const Container = styled.div`
   display: flex;
@@ -67,7 +68,16 @@ const Editor = () => {
             <div style={{ display: "flex" }}>
               <h4>Editor</h4>
               <div style={{ flexGrow: 1 }}></div>
-              <h4>Theme icon</h4>
+              <h4>Light</h4>
+              <Switch
+                checked={darkTheme}
+                defaultChecked
+                sx={{ marginTop: 1.2 }}
+                onChange={() => {
+                  setDarkTheme(!darkTheme);
+                }}
+              />
+              <h4>Dark</h4>
             </div>
             <MonacoEditor
               language="markdown"
@@ -92,7 +102,16 @@ const Editor = () => {
             <div style={{ display: "flex" }}>
               <h4>Editor</h4>
               <div style={{ flexGrow: 1 }}></div>
-              <h4>Theme icon</h4>
+              <h4>Light</h4>
+              <Switch
+                checked={darkTheme}
+                defaultChecked
+                sx={{ marginTop: 1.2 }}
+                onChange={() => {
+                  setDarkTheme(!darkTheme);
+                }}
+              />
+              <h4>Dark</h4>
             </div>
             <h3>Select a section from the left sidebar to edit the contents</h3>
           </EditorWrapper>
