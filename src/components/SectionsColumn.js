@@ -4,22 +4,27 @@ import Typography from "@mui/material/Typography";
 import initialData from "../initial-data";
 import { DragDropContext } from "react-beautiful-dnd";
 import Column from "./Column";
+import CachedIcon from "@mui/icons-material/Cached";
 
 const Container = styled.div`
-  margin-top: 2px;
   margin-left: 15px;
   margin-right: 15px;
-  border: 2px solid lightgrey;
   border-radius: 2px;
   width: 25vw;
   height: 80vh;
-  background-color: white;
-  padding: 8px;
+  background-color: inherit;
   display: flex;
   flex-direction: column;
   align-items: space-between;
 
   overflow: scroll;
+`;
+
+const IconWrapper = styled.div`
+  display: flex;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const SectionList = styled.div`
@@ -65,6 +70,7 @@ const SectionsColumn = (props) => {
   };
 
   const handleSectionReset = (e, sectionId) => {
+    console.log(sectionId);
     let updatedEditableSections = editableSections;
     updatedEditableSections = updatedEditableSections.map((sec) => {
       if (sec.id !== sectionId) {
@@ -86,19 +92,32 @@ const SectionsColumn = (props) => {
       (sec) => sec.id !== sectionId
     );
     setTotalMarkdown(
-      updatedEditableSections.map((section) => section.markdown).join(" ")
+      updatedEditableSections.map((section) => section.markdown).join("\n")
     );
-    setEditorVisible(false);
-    setCurrSectionInMarkdown(
-      updatedEditableSections.length > 0
-        ? updatedEditableSections[0].markdown
-        : "section-1"
-    );
+
     setEditableSections(updatedEditableSections);
     localStorage.setItem(
       "editable-sections",
       JSON.stringify(updatedEditableSections)
     );
+    setCurrSectionInMarkdown("");
+    setEditorVisible(false);
+
+    const newUnusedSections = data.sectionsOrdering.filter(
+      (sectionId) =>
+        updatedEditableSections.map((sec) => sec.id).indexOf(sectionId) === -1
+    );
+    newUnusedSections.push(data.sections[sectionId].id);
+
+    newUnusedSections.sort((secId1, secId2) => {
+      const secTitle1 = data.sections[secId1].title;
+      const secTitle2 = data.sections[secId2].title;
+      return secTitle1 < secTitle2 ? -1 : 1;
+    });
+    setData({
+      ...data,
+      sectionsOrdering: newUnusedSections,
+    });
   };
 
   useEffect(() => {
@@ -107,6 +126,11 @@ const SectionsColumn = (props) => {
     const newUnusedSections = data.sectionsOrdering.filter(
       (sectionId) => newSections.map((sec) => sec.id).indexOf(sectionId) === -1
     );
+    newUnusedSections.sort((secId1, secId2) => {
+      const secTitle1 = data.sections[secId1].title;
+      const secTitle2 = data.sections[secId2].title;
+      return secTitle1 < secTitle2 ? -1 : 1;
+    });
     setData({
       ...data,
       sectionsOrdering: newUnusedSections,
@@ -125,7 +149,7 @@ const SectionsColumn = (props) => {
       setEditorVisible(false);
     }
 
-    setTotalMarkdown(newSections.map((section) => section.markdown).join(" "));
+    setTotalMarkdown(newSections.map((section) => section.markdown).join("\n"));
   }, []);
 
   useEffect(() => {
@@ -134,6 +158,8 @@ const SectionsColumn = (props) => {
     );
     if (currSection.length > 0) {
       setMarkdown(currSection[0].markdown);
+    } else {
+      setEditorVisible(false);
     }
   });
 
@@ -162,7 +188,7 @@ const SectionsColumn = (props) => {
     } else {
       setEditorVisible(false);
     }
-    setTotalMarkdown(newSections.map((section) => section.markdown).join(" "));
+    setTotalMarkdown(newSections.map((section) => section.markdown).join("\n"));
     setEditableSections(newSections);
 
     localStorage.setItem("editable-sections", JSON.stringify(newSections));
@@ -196,6 +222,11 @@ const SectionsColumn = (props) => {
     const newUnusedSections = data.sectionsOrdering.filter(
       (sectionId) => newSections.map((sec) => sec.id).indexOf(sectionId) === -1
     );
+    newUnusedSections.sort((secId1, secId2) => {
+      const secTitle1 = data.sections[secId1].title;
+      const secTitle2 = data.sections[secId2].title;
+      return secTitle1 < secTitle2 ? -1 : 1;
+    });
     setData({
       ...data,
       sectionsOrdering: newUnusedSections,
@@ -203,72 +234,121 @@ const SectionsColumn = (props) => {
 
     setMarkdown(newSections[destination.index].markdown);
     setCurrSectionInMarkdown(newSections[destination.index].id);
-    setTotalMarkdown(newSections.map((section) => section.markdown).join(" "));
+    setTotalMarkdown(newSections.map((section) => section.markdown).join("\n"));
 
     return;
   };
   return (
-    <>
-      <Container>
-        <DragDropContext
-          onDragEnd={handleDragEnd}
-          // onDragStart={handleDragStart}
-          // onDragUpdate={handleDragUpdate}
+    <Container>
+      <div style={{ display: "flex", marginLeft: "10px", marginRight: "10px" }}>
+        <h4>Sections</h4>
+        <div style={{ flexGrow: 1 }}></div>
+        <IconWrapper
+          onClick={(e) => {
+            if (
+              !window.confirm(
+                "All sections of your readme will be removed; to continue, click OK"
+              )
+            ) {
+              return;
+            }
+            let updatedEditableSections = editableSections;
+            updatedEditableSections = [];
+            setTotalMarkdown(
+              updatedEditableSections
+                .map((section) => section.markdown)
+                .join("\n")
+            );
+
+            setEditableSections(updatedEditableSections);
+            localStorage.setItem(
+              "editable-sections",
+              JSON.stringify(updatedEditableSections)
+            );
+            setCurrSectionInMarkdown("");
+            setEditorVisible(false);
+
+            const newUnusedSections = initialData.sectionsOrdering;
+
+            newUnusedSections.sort((secId1, secId2) => {
+              const secTitle1 = data.sections[secId1].title;
+              const secTitle2 = data.sections[secId2].title;
+              return secTitle1 < secTitle2 ? -1 : 1;
+            });
+            setData({
+              ...data,
+              sectionsOrdering: newUnusedSections,
+            });
+          }}
         >
-          <Typography variant="caption" component="div" gutterBottom>
-            Click on a section below to edit the contents
-          </Typography>
-          <Column
-            sections={editableSections}
-            handleSectionClick={handleSectionClick}
-            handleSectionReset={handleSectionReset}
-            handleSectionDelete={handleSectionDelete}
-            setEditorVisible={setEditorVisible}
-          />
-        </DragDropContext>
+          <CachedIcon style={{ marginTop: "18px", marginRight: "5px" }} />
+          <h4>Reset</h4>
+        </IconWrapper>
+      </div>
+      <DragDropContext
+        onDragEnd={handleDragEnd}
+        // onDragStart={handleDragStart}
+        // onDragUpdate={handleDragUpdate}
+      >
         <Typography variant="caption" component="div" gutterBottom>
-          Click on a section below to add it to your readme
+          Click on a section below to edit the contents
         </Typography>
-        <SectionList>
-          {Array.from(
-            data.sectionsOrdering.map((sectionId) => data.sections[sectionId])
-          ).map((section) => (
-            <CardWrapper
-              key={section.id}
-              onClick={(e) => {
-                const newSections = Array.from(editableSections);
-                newSections.push(section);
-                setEditableSections(newSections);
+        <Column
+          sections={editableSections}
+          handleSectionClick={handleSectionClick}
+          handleSectionReset={handleSectionReset}
+          handleSectionDelete={handleSectionDelete}
+          setEditorVisible={setEditorVisible}
+        />
+      </DragDropContext>
+      <Typography variant="caption" component="div" gutterBottom>
+        Click on a section below to add it to your readme
+      </Typography>
+      <SectionList>
+        {Array.from(
+          data.sectionsOrdering.map((sectionId) => data.sections[sectionId])
+        ).map((section) => (
+          <CardWrapper
+            key={section.id}
+            onClick={(e) => {
+              const newSections = Array.from(editableSections);
+              // TODO: save previous values of sections which were once used then deleted in local storage. Use those values when use re-add these sections.
+              newSections.push(section);
+              setEditableSections(newSections);
 
-                const newUnusedSections = data.sectionsOrdering.filter(
-                  (sectionId) =>
-                    newSections.map((sec) => sec.id).indexOf(sectionId) === -1
-                );
-                setData({
-                  ...data,
-                  sectionsOrdering: newUnusedSections,
-                });
+              const newUnusedSections = data.sectionsOrdering.filter(
+                (sectionId) =>
+                  newSections.map((sec) => sec.id).indexOf(sectionId) === -1
+              );
+              newUnusedSections.sort((secId1, secId2) => {
+                const secTitle1 = data.sections[secId1].title;
+                const secTitle2 = data.sections[secId2].title;
+                return secTitle1 < secTitle2 ? -1 : 1;
+              });
+              setData({
+                ...data,
+                sectionsOrdering: newUnusedSections,
+              });
 
-                setMarkdown(section.markdown);
-                setCurrSectionInMarkdown(section.id);
-                setTotalMarkdown(
-                  newSections.map((section) => section.markdown).join(" ")
-                );
-              }}
+              setMarkdown(section.markdown);
+              setCurrSectionInMarkdown(section.id);
+              setTotalMarkdown(
+                newSections.map((section) => section.markdown).join("\n")
+              );
+            }}
+          >
+            <Typography
+              variant="subtitle1"
+              component="div"
+              gutterBottom
+              sx={{ paddingLeft: 1 }}
             >
-              <Typography
-                variant="subtitle1"
-                component="div"
-                gutterBottom
-                sx={{ paddingLeft: 1 }}
-              >
-                {section.title}
-              </Typography>
-            </CardWrapper>
-          ))}
-        </SectionList>
-      </Container>
-    </>
+              {section.title}
+            </Typography>
+          </CardWrapper>
+        ))}
+      </SectionList>
+    </Container>
   );
 };
 

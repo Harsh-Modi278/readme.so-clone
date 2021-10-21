@@ -77,7 +77,13 @@ const Section = (props) => {
               <div style={{ flexGrow: "1" }}></div>
               <IconWrapper
                 onClick={(e) => {
-                  console.log("here:", e.target);
+                  if (
+                    !window.confirm(
+                      "The section will be reset to default template; to continue, click OK"
+                    )
+                  ) {
+                    return;
+                  }
                   handleSectionReset(e, section.id);
                 }}
               >
