@@ -20,7 +20,7 @@ const Preview = styled.div`
   border: 2px solid black;
   border-radius: 2px;
   width: 35vw;
-  height: 72vh;
+  height: 75vh;
   margin-left: 10px;
   padding: 16px;
   overflow: scroll;
@@ -28,10 +28,9 @@ const Preview = styled.div`
 
 const EditorWrapper = styled.div`
   width: 35vw;
-  height: 80vh;
+  height: 75vh;
   margin-left: 10px;
   margin-right: 10px;
-  overflow: scroll;
 `;
 
 const ButtonWrapper = styled.div`
@@ -85,6 +84,7 @@ const Editor = () => {
                   enabled: false,
                 },
               }}
+              style={{ overflow: "scroll" }}
             />
           </EditorWrapper>
         ) : (
@@ -167,7 +167,7 @@ const Editor = () => {
               value={totalMarkdown}
               loading="loading..."
               width="35vw"
-              height="72vh"
+              height="75vh"
               options={{
                 lineNumbers: "off",
                 minimap: {

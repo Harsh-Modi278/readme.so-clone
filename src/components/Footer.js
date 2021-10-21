@@ -2,13 +2,26 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
+import GitHubIcon from "@mui/icons-material/GitHub";
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {"Made by "}
-      <Link color="inherit" href="https://github.com/Harsh-Modi278">
-        Harsh Modi
+    <Typography variant="body2" color="textSecondary" align="center">
+      {"Copyright © 2021  "}
+      <Link
+        color="inherit"
+        href="https://github.com/Harsh-Modi278"
+        target="_blank"
+        style={{ textDecoration: "none" }}
+      >
+        Harsh-Modi278
+      </Link>{" "}
+      <Link
+        color="inherit"
+        href="https://github.com/Harsh-Modi278"
+        target="_blank"
+      >
+        <GitHubIcon fontSize="70%" />
       </Link>{" "}
     </Typography>
   );
@@ -16,22 +29,18 @@ function Copyright() {
 
 function Footer(props) {
   return (
-    <Box
-      component="footer"
-      sx={{
-        py: 3,
-        px: 2,
-        mt: "auto",
-        backgroundColor: (theme) =>
-          theme.palette.mode === "light"
-            ? theme.palette.grey[200]
-            : theme.palette.grey[800],
+    <footer
+      style={{
+        marginTop: "5vh",
+        marginBottom: "5vh",
+        color: "inherit",
+        padding: "20px",
       }}
     >
       <Container maxWidth="sm">
         <Copyright />
       </Container>
-    </Box>
+    </footer>
   );
 }
 

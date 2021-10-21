@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import { Link as RouterLink } from "react-router-dom";
 
 const handleDownload = (e, totalMarkdown) => {
   const element = document.createElement("a");
@@ -17,10 +18,19 @@ const Header = (props) => {
   const { totalMarkdown } = props;
   return (
     <Box>
-      <AppBar position="static" sx={{ padding: 1.5 }} color="inherit">
+      <AppBar position="relative" sx={{ padding: 1.5 }} color="inherit">
         <Toolbar variant="dense">
-          <Typography variant="h6" color="inherit" component="div">
-            Readme.so Clone
+          <Typography variant="h5" color="inherit" component="div">
+            <RouterLink
+              to="/"
+              style={{
+                color: "black",
+                textDecorationLine: "none",
+                cursor: "pointer",
+              }}
+            >
+              <strong>readme.so-clone</strong>
+            </RouterLink>
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <Button
@@ -28,7 +38,7 @@ const Header = (props) => {
             color="primary"
             onClick={(e) => handleDownload(e, totalMarkdown)}
           >
-            Download
+            <strong>Download</strong>
           </Button>
         </Toolbar>
       </AppBar>
