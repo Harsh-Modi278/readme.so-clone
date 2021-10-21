@@ -38,6 +38,8 @@ const Section = (props) => {
     sectionIdClicked,
     setSectionIDClicked,
     handleSectionReset,
+    handleSectionDelete,
+    setEditorVisible,
   } = props;
   return (
     <Draggable draggableId={section.id} index={index} key={section.id}>
@@ -50,6 +52,7 @@ const Section = (props) => {
             // console.log("here:", e.currentTarget);
             setSectionIDClicked(section.id);
             handleSectionClick(e, section.id);
+            setEditorVisible(true);
           }}
           onFocus={(e) => {
             console.log("here");
@@ -80,7 +83,11 @@ const Section = (props) => {
               >
                 <CachedIcon />
               </IconWrapper>
-              <IconWrapper>
+              <IconWrapper
+                onClick={(e) => {
+                  handleSectionDelete(e, section.id);
+                }}
+              >
                 <DeleteIcon />
               </IconWrapper>
             </>

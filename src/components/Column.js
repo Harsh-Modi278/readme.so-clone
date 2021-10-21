@@ -10,7 +10,13 @@ const SectionList = styled.div`
 `;
 
 const Column = (props) => {
-  const { sections, handleSectionClick, handleSectionReset } = props;
+  const {
+    sections,
+    handleSectionClick,
+    handleSectionReset,
+    handleSectionDelete,
+    setEditorVisible,
+  } = props;
   const [sectionIdClicked, setSectionIDClicked] = useState("section-1");
   return (
     <Droppable droppableId="sections">
@@ -29,6 +35,8 @@ const Column = (props) => {
               setSectionIDClicked={setSectionIDClicked}
               sectionIdClicked={sectionIdClicked}
               handleSectionReset={handleSectionReset}
+              handleSectionDelete={handleSectionDelete}
+              setEditorVisible={setEditorVisible}
             />
           ))}
           {provided.placeholder}

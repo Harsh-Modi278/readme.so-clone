@@ -32,6 +32,8 @@ const EditorWrapper = styled.div`
 const Editor = () => {
   const [markdown, setMarkdown] = useState("");
   const [totalMarkdown, setTotalMarkdown] = useState("");
+  const [editorVisible, setEditorVisible] = useState(false);
+
   return (
     <Container>
       <SectionsColumn
@@ -41,25 +43,33 @@ const Editor = () => {
           (sectionId) => initialData.sections[sectionId]
         )}
         markdownValue={markdown}
+        setEditorVisible={setEditorVisible}
       />
-      <EditorWrapper>
-        <MonacoEditor
-          language="markdown"
-          theme="vs-dark"
-          value={markdown}
-          loading="loading..."
-          onChange={(value, e) => {
-            setMarkdown(value);
-            // console.log(currSectionInMarkdown);
-          }}
-          options={{
-            lineNumbers: "off",
-            minimap: {
-              enabled: false,
-            },
-          }}
-        />
-      </EditorWrapper>
+      {editorVisible ? (
+        <EditorWrapper>
+          <MonacoEditor
+            language="markdown"
+            theme="vs-dark"
+            value={markdown}
+            loading="loading..."
+            onChange={(value, e) => {
+              setMarkdown(value);
+              // console.log(currSectionInMarkdown);
+            }}
+            options={{
+              lineNumbers: "off",
+              minimap: {
+                enabled: false,
+              },
+            }}
+          />
+        </EditorWrapper>
+      ) : (
+        <EditorWrapper>
+          <h3>Select a section from the left sidebar to edit the contents</h3>
+        </EditorWrapper>
+      )}
+
       <Preview className="markdown-body">
         <ReactMarkdownWrapper body={totalMarkdown} />
       </Preview>

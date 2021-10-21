@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import Typography from "@mui/material/Typography";
 import initialData from "../initial-data";
@@ -44,7 +44,8 @@ const CardWrapper = styled.div`
 `;
 
 const SectionsColumn = (props) => {
-  const { setMarkdown, setTotalMarkdown, markdownValue } = props;
+  const { setMarkdown, setTotalMarkdown, markdownValue, setEditorVisible } =
+    props;
   const [currSectionInMarkdown, setCurrSectionInMarkdown] =
     useState("section-1");
   const [data, setData] = useState(initialData);
@@ -53,6 +54,7 @@ const SectionsColumn = (props) => {
       ? [...JSON.parse(localStorage.getItem("editable-sections"))]
       : [initialData.sections["section-1"]]
   );
+  const firstUpdate = useRef(true);
 
   const handleSectionClick = (e, sectionId) => {
     // set markdown in editor to the clicked section's (with 'sectionId') markdown
@@ -70,7 +72,28 @@ const SectionsColumn = (props) => {
       }
       return initialData.sections[sectionId];
     });
+    setEditableSections(updatedEditableSections);
     setMarkdown(initialData.sections[sectionId]);
+    localStorage.setItem(
+      "editable-sections",
+      JSON.stringify(updatedEditableSections)
+    );
+  };
+
+  const handleSectionDelete = (e, sectionId) => {
+    let updatedEditableSections = editableSections;
+    updatedEditableSections = updatedEditableSections.filter(
+      (sec) => sec.id !== sectionId
+    );
+    setTotalMarkdown(
+      updatedEditableSections.map((section) => section.markdown).join(" ")
+    );
+    setEditorVisible(false);
+    setCurrSectionInMarkdown(
+      updatedEditableSections.length > 0
+        ? updatedEditableSections[0].markdown
+        : "section-1"
+    );
     setEditableSections(updatedEditableSections);
     localStorage.setItem(
       "editable-sections",
@@ -80,6 +103,7 @@ const SectionsColumn = (props) => {
 
   useEffect(() => {
     let newSections = Array.from(editableSections);
+
     const newUnusedSections = data.sectionsOrdering.filter(
       (sectionId) => newSections.map((sec) => sec.id).indexOf(sectionId) === -1
     );
@@ -87,23 +111,40 @@ const SectionsColumn = (props) => {
       ...data,
       sectionsOrdering: newUnusedSections,
     });
-
-    setMarkdown(editableSections[0].markdown);
-    setCurrSectionInMarkdown(editableSections[0].id);
+    if (
+      newSections.filter((sec) => sec.id === currSectionInMarkdown).length > 0
+    ) {
+      setMarkdown(
+        newSections.filter((sec) => sec.id === currSectionInMarkdown)[0]
+          .markdown
+      );
+      setCurrSectionInMarkdown(
+        newSections.filter((sec) => sec.id === currSectionInMarkdown)[0].id
+      );
+    } else {
+      setEditorVisible(false);
+    }
 
     setTotalMarkdown(newSections.map((section) => section.markdown).join(" "));
   }, []);
 
   useEffect(() => {
-    // console.log("component did update:", { markdownValue, editableSections });
-    setMarkdown(
-      editableSections.filter((sec) => sec.id === currSectionInMarkdown)[0]
-        .markdown
+    const currSection = editableSections.filter(
+      (sec) => sec.id === currSectionInMarkdown
     );
+    if (currSection.length > 0) {
+      setMarkdown(currSection[0].markdown);
+    }
   });
 
   useEffect(() => {
+    if (firstUpdate.current) {
+      // skipping the first update
+      firstUpdate.current = false;
+      return;
+    }
     let newSections = Array.from(editableSections);
+
     newSections = newSections.map((sec) => {
       if (sec.id !== currSectionInMarkdown) {
         return sec;
@@ -111,11 +152,18 @@ const SectionsColumn = (props) => {
       return { ...sec, markdown: markdownValue };
     });
 
-    setEditableSections(newSections);
-    setMarkdown(
-      newSections.filter((sec) => sec.id === currSectionInMarkdown)[0].markdown
-    );
+    if (
+      newSections.filter((sec) => sec.id === currSectionInMarkdown).length > 0
+    ) {
+      setMarkdown(
+        newSections.filter((sec) => sec.id === currSectionInMarkdown)[0]
+          .markdown
+      );
+    } else {
+      setEditorVisible(false);
+    }
     setTotalMarkdown(newSections.map((section) => section.markdown).join(" "));
+    setEditableSections(newSections);
 
     localStorage.setItem("editable-sections", JSON.stringify(newSections));
   }, [markdownValue]);
@@ -174,6 +222,8 @@ const SectionsColumn = (props) => {
             sections={editableSections}
             handleSectionClick={handleSectionClick}
             handleSectionReset={handleSectionReset}
+            handleSectionDelete={handleSectionDelete}
+            setEditorVisible={setEditorVisible}
           />
         </DragDropContext>
         <Typography variant="caption" component="div" gutterBottom>
