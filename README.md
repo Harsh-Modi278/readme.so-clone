@@ -8,7 +8,7 @@ Demo link: https://readme-so-clone.vercel.app/
 
 ## Screenshots
 
-![readme.so-clone demo screenshot](https://github.com/Harsh-Modi278/readme.so-clone/blob/main/public/assets/editor_demo_ss.pnge)
+![readme.so-clone demo screenshot](https://github.com/Harsh-Modi278/readme.so-clone/blob/main/public/assets/editor_demo_ss.png)
 
 ## Installation
 
