@@ -29,10 +29,10 @@ const Home = () => {
           </Typography>
         </Toolbar>
       </AppBar>
-      <main>
+      {/* <main> */}
         <Box
           sx={{
-            bgcolor: "background.paper",
+            // bgcolor: "background.paper",
             pt: 8,
             pb: 6,
           }}
@@ -89,10 +89,11 @@ const Home = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            border: "2px solid lightgrey",
-            borderRadius: "5px",
+            // border: "2px solid lightgrey",
+            // borderRadius: "5px",
             marginLeft: "50px",
             marginRight: "50px",
+            backgroundImage:"white"
           }}
         >
           <img
@@ -104,7 +105,7 @@ const Home = () => {
             }}
           />
         </div>
-      </main>
+      {/* </main> */}
       <Footer />
     </Box>
   );
