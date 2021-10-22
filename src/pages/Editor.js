@@ -18,18 +18,15 @@ const Container = styled.div`
 `;
 
 const Preview = styled.div`
-  border: 2px solid black;
+  border: 1px solid black;
   border-radius: 2px;
   width: 35vw;
   height: 75vh;
-  margin-left: 10px;
-  padding: 16px;
+  padding: ${(props) => (props.editorContent ? "none" : "16px")};
   overflow: scroll;
 `;
 
 const EditorWrapper = styled.div`
-  width: 35vw;
-  height: 75vh;
   margin-left: 10px;
   margin-right: 10px;
 `;
@@ -79,23 +76,26 @@ const Editor = () => {
               />
               <h4>Dark</h4>
             </div>
-            <MonacoEditor
-              language="markdown"
-              theme={darkTheme ? "vs-dark" : "light"}
-              value={markdown}
-              loading="loading..."
-              onChange={(value, e) => {
-                setMarkdown(value);
-                // console.log(currSectionInMarkdown);
-              }}
-              options={{
-                lineNumbers: "off",
-                minimap: {
-                  enabled: false,
-                },
-              }}
-              style={{ overflow: "scroll" }}
-            />
+            <div style={{ border: "1px solid black" }}>
+              <MonacoEditor
+                language="markdown"
+                theme={darkTheme ? "vs-dark" : "light"}
+                value={markdown}
+                width="35vw"
+                height="75vh"
+                loading="loading..."
+                onChange={(value, e) => {
+                  setMarkdown(value);
+                  // console.log(currSectionInMarkdown);
+                }}
+                options={{
+                  lineNumbers: "off",
+                  minimap: {
+                    enabled: false,
+                  },
+                }}
+              />
+            </div>
           </EditorWrapper>
         ) : (
           <EditorWrapper>
@@ -113,14 +113,16 @@ const Editor = () => {
               />
               <h4>Dark</h4>
             </div>
-            <h3>Select a section from the left sidebar to edit the contents</h3>
+            <div style={{ width: "35vw", height: "75vh" }}>
+              <h3>
+                Select a section from the left sidebar to edit the contents
+              </h3>
+            </div>
           </EditorWrapper>
         )}
 
-        <div>
-          <div
-            style={{ display: "flex", marginLeft: "10px", marginRight: "10px" }}
-          >
+        <EditorWrapper>
+          <div style={{ display: "flex" }}>
             <ButtonWrapper
               isClicked={isPreview}
               onClick={() => {
@@ -181,22 +183,24 @@ const Editor = () => {
               <ReactMarkdownWrapper body={String.raw`${totalMarkdown}`} />
             </Preview>
           ) : (
-            <MonacoEditor
-              theme={darkTheme ? "vs-dark" : "light"}
-              value={totalMarkdown}
-              loading="loading..."
-              width="35vw"
-              height="75vh"
-              options={{
-                lineNumbers: "off",
-                minimap: {
-                  enabled: false,
-                },
-                readOnly: true,
-              }}
-            />
+            <Preview editorContent={true}>
+              <MonacoEditor
+                theme={darkTheme ? "vs-dark" : "light"}
+                value={totalMarkdown}
+                loading="loading..."
+                // width="35vw"
+                // height="75vh"
+                options={{
+                  lineNumbers: "off",
+                  minimap: {
+                    enabled: false,
+                  },
+                  readOnly: true,
+                }}
+              />
+            </Preview>
           )}
-        </div>
+        </EditorWrapper>
       </Container>
     </>
   );
